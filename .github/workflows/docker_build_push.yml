@@ -27,21 +27,21 @@ jobs:
       with:
         context: .
         push: true
-        tags: haibbo/cf-openai-azure-proxy:${{ github.ref_name }}
+        tags: imryang/cf-openai-azure-proxy:${{ github.ref_name }}
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
         tags: |
-          haibbo/cf-openai-azure-proxy:${{ github.ref_name }}
-          haibbo/cf-openai-azure-proxy:latest
+          imryang/cf-openai-azure-proxy:${{ github.ref_name }}
+          imryang/cf-openai-azure-proxy:latest
         platforms: linux/amd64,linux/arm64/v8
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.ACTIONS_RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
@@ -50,16 +50,18 @@ jobs:
 
           ```sh
           docker run -d -p 8787:8787 -t cf-azure-openai-proxy \
-          --env RESOURCE_NAME=codegpt \
-          --env DEPLOY_NAME=gpt3 \
-          --env DEPLOY_NAME_GPT4=gpt4 \
-          haibbo/cf-openai-azure-proxy:latest
+            --env RESOURCE_NAME=[your azure resource name] \
+            --env DEPLOY_NAME_GPT35=gpt-35-turbo \
+            --env DEPLOY_NAME_GPT35_16K=gpt-35-turbo-16k \
+            --env DEPLOY_NAME_GPT4=gpt-4 \
+            --env DEPLOY_NAME_GPT4_32K=gpt-4-32k \
+            --env DEPLOY_TEXT_EMBEDDING_ADA_002=text-embedding-ada-002 \
+            imryang/cf-openai-azure-proxy:latest
           ```
 
-
           Docker image is available at:
-          - `haibbo/cf-openai-azure-proxy:${{ github.ref_name }}`
-          - `haibbo/cf-openai-azure-proxy:latest`
+          - `imryang/cf-openai-azure-proxy:${{ github.ref_name }}`
+          - `imryang/cf-openai-azure-proxy:latest`
 
           Enjoy!
         draft: false

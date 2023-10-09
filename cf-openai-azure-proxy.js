@@ -3,10 +3,23 @@ const resourceName=RESOURCE_NAME
 
 // The deployment name you chose when you deployed the model.
 const mapper = {
-    'gpt-3.5-turbo': DEPLOY_NAME_GPT35,
-    'gpt-3.5-turbo-16k': DEPLOY_NAME_GPT35_16K,
-    'gpt-4': DEPLOY_NAME_GPT4,
-    'gpt-4-32k': DEPLOY_NAME_GPT4_32K,
+  // gpt-3.5-turbo
+  'gpt-3.5-turbo': DEPLOY_NAME_GPT35,
+  'gpt-3.5-turbo-0301': DEPLOY_NAME_GPT35,
+  'gpt-3.5-turbo-0613': DEPLOY_NAME_GPT35,
+  // gpt-3.5-turbo-16k
+  'gpt-3.5-turbo-16k': DEPLOY_NAME_GPT35_16K,
+  'gpt-3.5-turbo-16k-0613': DEPLOY_NAME_GPT35_16K,
+  // gpt-4
+  'gpt-4': DEPLOY_NAME_GPT4,
+  'gpt-4-0314': DEPLOY_NAME_GPT4,
+  'gpt-4-0613': DEPLOY_NAME_GPT4,
+  // gpt-4-32
+  'gpt-4-32k': DEPLOY_NAME_GPT4_32K,
+  'gpt-4-32k-0314': DEPLOY_NAME_GPT4_32K,
+  'gpt-4-32k-0613': DEPLOY_NAME_GPT4_32K,
+  // text-embedding-ada-002
+  'text-embedding-ada-002': DEPLOY_TEXT_EMBEDDING_ADA_002
 };
 
 const apiVersion="2023-08-01-preview"
@@ -39,8 +52,8 @@ async function handleRequest(request) {
     body = await request.json();
   }
 
-  const modelName = body?.model;  
-  const deployName = mapper[modelName] || '' 
+  const modelName = body?.model;
+  const deployName = mapper[modelName] || ''
 
   if (deployName === '') {
     return new Response('Missing model mapper', {
@@ -71,7 +84,7 @@ async function handleRequest(request) {
 
   if (body?.stream != true){
     return response
-  } 
+  }
 
   let { readable, writable } = new TransformStream()
   stream(response.body, writable);
@@ -124,7 +137,7 @@ async function stream(readable, writable) {
 async function handleModels(request) {
   const data = {
     "object": "list",
-    "data": []  
+    "data": []
   };
 
   for (let key in mapper) {
@@ -149,7 +162,7 @@ async function handleModels(request) {
       }],
       "root": key,
       "parent": null
-    });  
+    });
   }
 
   const json = JSON.stringify(data, null, 2);
